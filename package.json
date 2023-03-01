@@ -1,0 +1,34 @@
+{
+    "name": "tailwindcss-glassmorphism",
+    "version": "0.1.0",
+    "description": "Generate glassy UI CSS code using tailwindcss",
+    "main": "index.js",
+    "files": [
+      "index.js"
+    ],
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "tailwindcss",
+      "tailwind",
+      "css",
+      "glassmorphism"
+    ],
+    "author": "Creanics <wolf.creanics@gmail.com>",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Creanics/tailwindcss-glassmorphism"
+    },
+    "bugs": {
+      "url": "https://github.com/Creanics/tailwindcss-glassmorphism/issues"
+    },
+    "homepage": "https://github.com/Creanics/tailwindcss-glassmorphism#readme",
+    "license": "MIT",
+    "dependencies": {
+      "color": "^3.1.2",
+      "loadash": "^1.0.0",
+      "tailwindcss": "^1.4.6"
+    }
+  }
+  
