@@ -13,34 +13,42 @@ const invalidKeywords = [
 
 const glassmorph = plugin(
   function ({addUtilities, theme, variants, e}) {
-    const rules = []
-    let colors = theme('backgroundColor');
-
-    _.forEach(colors, (color, colorName) => {
-        if(_.isString(color)) return [];
-
-        _.forEach(color, (value, index) => {
-            if(invalidKeywords.includes(value.toLowerCase())) return []
+    let colors = _.merge(theme('backgroundColor'), theme('glassmorphismColor'));
+    let opacities = _.merge(theme('opacity'), theme('glassmorphismOpacity'));
+    let blurs = theme('glassmorphismBlur');
+    let rules = []
     
-            let temp = new Color(value);
-            covaluelor = `rgba(${temp.color.join(',')},0.15)`
-    
-            _.forEach(theme('glassmorphismBlur'), (blur, blurKey) => {
-                rules.push([
-                    blurKey.toLowerCase() === 'default'
-                    ? `.${e(`glass-${colorName}-${index}`)}`
-                    : `.${e(`glass-${colorName}-${index}${blurKey   
-                        ? "-" + blurKey
-                        : ""}`
-                    )}`,
-                    {
-                        backgroundColor: value,
-                        backdropFilter: `blur(${blur})`,
-                    },
-                ])
+    _.forEach(
+      blurs, 
+      (blurValue, blurName) => {
+
+        _.forEach(
+          opacities, 
+          (opacityValue, opacityName) => {
+
+            _.forEach(
+              colors, 
+              (colorValues, colorName) => {
+
+                if(_.isString(colorValues)) return[];
+                _.forEach(
+                  colorValues, 
+                  (colorValue, colorIndex) => {
+
+                    let color = new Color(colorValue);
+                    colorValue = `rgba(${color.color.join(',')},${opacityValue})`
+            
+                    rules.push([
+                        `.${e(`glass-${colorName}-${colorIndex}/${opacityName}-${blurName}`)}`,
+                        {
+                            backgroundColor: colorValue,
+                            backdropFilter: `blur(${blurValue})`,
+                        },
+                    ])
+                })
             })
-        })}
-    )
+        })
+    })  
     
     addUtilities(
       _.fromPairs(rules),
@@ -49,17 +57,17 @@ const glassmorph = plugin(
   },
   {
     theme: {
-        glassmorphismBlur:{
-            "none": "0",
-            "sm": "2px",
-            "": "4px",
-            "md": "8px",
-            "lg": "16px",
-            "xl": "24px",
-            "2xl": "40px",
-            "3xl": "64px",
-        }
-    },
+      glassmorphismBlur:{
+        none: "0",
+        sm: "2px",
+        default: "4px",
+        md: "8px",
+        lg: "16px",
+        xl: "24px",
+        "2xl": "40px",
+        "3xl": "64px",
+      }
+    }
   },
 )
 
