@@ -2,15 +2,6 @@ const Color = require('color')
 const _ = require('lodash')
 const plugin = require('tailwindcss/plugin')
 
-
-const invalidKeywords = [
-    'currentcolor',
-    'transparent',
-    'unset',
-    'initial',
-    'inherit',
-]
-
 const glassmorph = plugin(
   function ({addUtilities, theme, variants, e}) {
     let colors = _.merge(theme('backgroundColor'), theme('glassmorphismColor'));
@@ -19,36 +10,41 @@ const glassmorph = plugin(
     let rules = []
     
     _.forEach(
-      blurs, 
-      (blurValue, blurName) => {
-
-        _.forEach(
-          opacities, 
-          (opacityValue, opacityName) => {
+        blurs, 
+        (blurValue, blurName) => {
 
             _.forEach(
-              colors, 
-              (colorValues, colorName) => {
+                opacities, 
+                (opacityValue, opacityName) => {
 
-                if(_.isString(colorValues)) return[];
-                _.forEach(
-                  colorValues, 
-                  (colorValue, colorIndex) => {
+                    _.forEach(
+                        colors, 
+                        (colorValues, colorName) => {
 
-                    let color = new Color(colorValue);
-                    colorValue = `rgba(${color.color.join(',')},${opacityValue})`
-            
-                    rules.push([
-                        `.${e(`glass-${colorName}-${colorIndex}/${opacityName}-${blurName}`)}`,
-                        {
-                            backgroundColor: colorValue,
-                            backdropFilter: `blur(${blurValue})`,
-                        },
-                    ])
-                })
-            })
-        })
-    })  
+                            if(_.isString(colorValues)) return[];
+                            _.forEach(
+                                colorValues, 
+                                (colorValue, colorIndex) => {
+
+                                    let color = new Color(colorValue);
+                                    let rule = ".";
+                                    colorValue = `rgba(${color.color.join(',')},${opacityValue})`;
+
+                                    rules.push([
+                                        rule,
+                                        {
+                                            backgroundColor: colorValue,
+                                            backdropFilter: `blur(${blurValue})`,
+                                        },
+                                    ])
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        }
+    )  
     
     addUtilities(
       _.fromPairs(rules),
@@ -57,16 +53,20 @@ const glassmorph = plugin(
   },
   {
     theme: {
-      glassmorphismBlur:{
-        none: "0",
-        sm: "2px",
-        default: "4px",
-        md: "8px",
-        lg: "16px",
-        xl: "24px",
-        "2xl": "40px",
-        "3xl": "64px",
-      }
+        glassmorphismBlur:{
+          none: "0",
+          sm: "2px",
+          default: "4px",
+          md: "8px",
+          lg: "16px",
+          xl: "24px",
+          "2xl": "40px",
+          "3xl": "64px",
+        },
+        glassmorphismColor:{
+          default: "#f3f4f6",
+          red: "#ff00ff"
+        }
     }
   },
 )
